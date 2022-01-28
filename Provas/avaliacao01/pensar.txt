@@ -1,0 +1,16 @@
+Fiz isso aqui pra me ajudar a resolver os problemas que apareciam
+
+deveria ter usado for no lugar de while, dai não precisaria da variavel cont, tenho que ficar resetando ela pra 0
+depois de cada while que eu usar
+
+Bugs:
+
+transferencia/aumentar > cadastrar > aumentar > listar = erro: nullPointerException // array completamente vazio quando deveria ter dados.
+
+Correção: apliquei um if para quando for o segundo aumentar, ele transferir de NovaListaPilotos para um 
+array temporario e dps voltar pra NovaListaPilotos. Só que eu não botei um else, por isso ele resetava o array
+logo depois de fazer isso deixando o array vazio dnv, causando assim nullPointerException.
+
+
+transferencia/aumentar > cadastrar > cpf =  erro: nullPointerException //
+mesmo problema do de cima.
