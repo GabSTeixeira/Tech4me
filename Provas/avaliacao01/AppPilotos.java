@@ -98,8 +98,8 @@ public class AppPilotos {
                                 pilotos[cont].getMatricula());
                         cont++;
                     }
+                    cont = 0;
                 }
-                cont = 0;
                 voltarMenu(in);
             }
 
@@ -157,7 +157,7 @@ public class AppPilotos {
                     EspacoPadrao = NovoEspaço;
                     EspacoDisponivel = EspacoPadrao - qtdCadastrados;
 
-                    // verifica se ja foi feita uma transferencia e caso tenha sido feito
+                    // verifica se ja foi feita uma transferencia e caso tenha sido feita
                     // ele pega as informações bota em um array temporario e dps devolve pro
                     // novo array "NovaListaPilotos" que esta com tamanho novo. Caso não tenha sido
                     // feita ele faz a transferencia de Pilotos[] para NovaListaPilotos[]
