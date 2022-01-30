@@ -5,15 +5,13 @@ import Classe.Pessoa;
 
 public class AppPilotos {
     public static void main(String[] args) throws InterruptedException, IOException {
-        final int MAX_ELEMENTOS = 20;
+        final int MAX_ELEMENTOS = 2;
         int opcao, qtdCadastrados = 0, cont = 0 /* variavel de controle para os loops */;
-        boolean TransferenciaConcluida = false; // variavel para checagem se é o antigo ou o novo array que esta sendo
-                                                // trabalhado
         int EspacoPadrao = MAX_ELEMENTOS; // como o nome diz é o padrão até ser alterado
         int EspacoDisponivel = EspacoPadrao; // espaço disponivel no vetor atual
 
         Pessoa[] pilotos = new Pessoa[MAX_ELEMENTOS];
-        Pessoa[] NovaListaPilotos = {}; // o novo array vazio para não dar o erro (variavel não iniciada)
+
         Scanner in = new Scanner(System.in);
         do {
             System.out.println("\n****\nMENU\n****\n");
@@ -30,7 +28,7 @@ public class AppPilotos {
             // Cadastrar piloto
             if (opcao == 1) {
                 // Se não tem mais espaço no vetor, caio fora e também considera se é um novo
-                // vetor
+                // vetor com tamanho diferente
                 if (EspacoDisponivel <= 0) {
                     System.out.println("\nNão há espaço para cadastrar novos pilotos.");
                     voltarMenu(in);
@@ -44,24 +42,15 @@ public class AppPilotos {
                 int c = in.nextInt();
                 in.nextLine();
 
-                if (!TransferenciaConcluida) {
-                    Pessoa p1 = new Pessoa(n, c);
-                    pilotos[qtdCadastrados] = p1;
+                Pessoa p1 = new Pessoa(n, c);
+                pilotos[qtdCadastrados] = p1;
 
-                    qtdCadastrados++;
-                    EspacoDisponivel--;
-                    System.out.println("\nPiloto cadastrado com sucesso.");
-                    voltarMenu(in);
-                } else {
-                    Pessoa p1 = new Pessoa(n, c);
-                    NovaListaPilotos[qtdCadastrados] = p1;
+                qtdCadastrados++;
+                EspacoDisponivel--;
+                System.out.println("\nPiloto cadastrado com sucesso.");
+                voltarMenu(in);
 
-                    qtdCadastrados++;
-                    EspacoDisponivel--;
-                    System.out.println("\nPiloto cadastrado com sucesso.");
-                    voltarMenu(in);
-                }
-            } else
+            }
 
             // Listar pilotos cadastrados
             if (opcao == 2) {
@@ -70,30 +59,19 @@ public class AppPilotos {
 
                 // Se não tem ninguém cadastrado no vetor, caio fora
                 if (qtdCadastrados == 0) {
-                    System.out.println("\nNão há motoristas cadastrados para exibir.");
+                    System.out.println("\nNão há pilotos cadastrados para exibir.");
                     voltarMenu(in);
                     continue;
                 }
-                // se a transferencia tiver ocorrido ele faz a exibição com o novo array, senão
-                // ele faz com o antigo
-                if (TransferenciaConcluida) {
-                    while (cont != qtdCadastrados) {
-                        System.out.printf("\nPiloto %s:|| nome: %s|| cpf: %s||", (cont + 1),
-                                NovaListaPilotos[cont].getNome(), NovaListaPilotos[cont].getCpf());
-                        cont++;
-                    }
-                    cont = 0;
-                } else {
-                    while (cont != qtdCadastrados) {
-                        System.out.printf("\nPiloto %s:|| nome: %s|| cpf: %s||", (cont + 1),
-                                pilotos[cont].getNome(), pilotos[cont].getCpf());
-                        cont++;
-                    }
+                while (cont != qtdCadastrados) {
+                    System.out.printf("\nPiloto %s:|| nome: %s cpf: %s||", (cont + 1),
+                            pilotos[cont].getNome(), pilotos[cont].getCpf());
+                    cont++;
                 }
+
                 cont = 0;
                 voltarMenu(in);
             }
-
             // Localizar piloto pelo CPF
             else if (opcao == 3) {
 
@@ -102,28 +80,15 @@ public class AppPilotos {
                 int CpfProcurado = in.nextInt();
                 in.nextLine();
 
-                if (TransferenciaConcluida) {
-                    while (cont != qtdCadastrados) {
-                        if (NovaListaPilotos[cont].getCpf() == CpfProcurado) {
-                            PilotoProcurado = cont + 1;
-                            // encerra o loop se achar o cpf
-                            cont = qtdCadastrados;
-                        } else {
-                            cont++;
-                        }
+                while (cont != qtdCadastrados) {
+                    if (pilotos[cont].getCpf() == CpfProcurado) {
+                        PilotoProcurado = cont + 1;
+                        cont = qtdCadastrados;
+                    } else {
+                        cont++;
                     }
-                    cont = 0;
-                } else {
-                    while (cont != qtdCadastrados) {
-                        if (pilotos[cont].getCpf() == CpfProcurado) {
-                            PilotoProcurado += cont + 1;
-                            cont = qtdCadastrados;
-                        } else {
-                            cont++;
-                        }
-                    }
-                    cont = 0;
                 }
+                cont = 0;
                 if (PilotoProcurado == 0) {
                     System.out.println("\nCpf não encontrado");
                     voltarMenu(in);
@@ -148,41 +113,22 @@ public class AppPilotos {
                     EspacoPadrao = NovoEspaço;
                     EspacoDisponivel = EspacoPadrao - qtdCadastrados;
 
-                    // verifica se ja foi feita uma transferencia e caso tenha sido feito
-                    // ele pega as informações bota em um array temporario e dps devolve pro
-                    // novo array "NovaListaPilotos" que esta com tamanho novo. Caso não tenha sido
-                    // feita ele faz a transferencia de Pilotos[] para NovaListaPilotos[]
-                    if (TransferenciaConcluida) {
-                        Pessoa[] ArrayTemporario = new Pessoa[NovaListaPilotos.length];
+                    Pessoa[] ArrayTemporario = new Pessoa[pilotos.length];
 
-                        while (cont != qtdCadastrados) {
-                            ArrayTemporario[cont] = NovaListaPilotos[cont];
-                            cont++;
-                        }
-                        cont = 0;
-                        NovaListaPilotos = new Pessoa[NovoEspaço];
-                        while (cont != qtdCadastrados) {
-                            NovaListaPilotos[cont] = ArrayTemporario[cont];
-                            cont++;
-
-                        }
-                        cont = 0;
-
-                    } else {
-                        NovaListaPilotos = new Pessoa[NovoEspaço];
-                        while (cont != qtdCadastrados) {
-                            // transfere os dados de um array para outro
-                            NovaListaPilotos[cont] = pilotos[cont];
-                            cont++;
-                        }
-                        // confirma a transferencia
-                        TransferenciaConcluida = true;
-                        cont = 0;
-
+                    while (cont != qtdCadastrados) {
+                        ArrayTemporario[cont] = pilotos[cont];
+                        cont++;
                     }
+                    cont = 0;
+
+                    pilotos = new Pessoa[NovoEspaço];
+                    while (cont != qtdCadastrados) {
+                        pilotos[cont] = ArrayTemporario[cont];
+                        cont++;
+                    }
+                    cont = 0;
                     System.out.println("\nEspaço modificado com sucesso.");
                     voltarMenu(in);
-
                 } else {
                     System.out.println("\nNão é possivel baixar o espaço disponivel");
                     voltarMenu(in);
