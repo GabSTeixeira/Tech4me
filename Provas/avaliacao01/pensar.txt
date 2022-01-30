@@ -14,3 +14,9 @@ logo depois de fazer isso deixando o array vazio dnv, causando assim nullPointer
 
 transferencia/aumentar > cadastrar > cpf =  erro: nullPointerException //
 mesmo problema do de cima.
+
+
+
+atualização: mudei para não usar um array novo, mas sim sobreescrever array piloto com um novo tamanho,
+para não perder os dados eu passo os dados atuais de array piloto para um array temporario e dps devolvo pra piloto[]
+que esta de tamanho novo
