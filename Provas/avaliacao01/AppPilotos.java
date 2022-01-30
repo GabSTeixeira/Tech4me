@@ -5,7 +5,7 @@ import Classe.Pessoa;
 
 public class AppPilotos {
     public static void main(String[] args) throws InterruptedException, IOException {
-        final int MAX_ELEMENTOS = 2;
+        final int MAX_ELEMENTOS = 20;
         int opcao, qtdCadastrados = 0, cont = 0 /* variavel de controle para os loops */;
         int EspacoPadrao = MAX_ELEMENTOS; // como o nome diz é o padrão até ser alterado
         int EspacoDisponivel = EspacoPadrao; // espaço disponivel no vetor atual
@@ -64,7 +64,7 @@ public class AppPilotos {
                     continue;
                 }
                 while (cont != qtdCadastrados) {
-                    System.out.printf("\nPiloto %s:|| nome: %s cpf: %s||", (cont + 1),
+                    System.out.printf("\nPiloto %s:|| nome: %s cpf: %s", (cont + 1),
                             pilotos[cont].getNome(), pilotos[cont].getCpf());
                     cont++;
                 }
