@@ -1,10 +1,9 @@
 package Classe;
 
-// Não ultiliza no codigo mas deixei do jeito que eu acho que seja o certo
 public class Aeronave {
     private String Modelo;
     private String Categoria;
-    private Piloto oPiloto;
+    private Piloto[] oPiloto = new Piloto[50];
 
     public Aeronave (){}
 
@@ -12,16 +11,17 @@ public class Aeronave {
         this.Modelo = m;
         this.Categoria = c;
     }
-    
-    public Aeronave (String m, String c, Piloto oPiloto) {
-        this(oPiloto);
+    // criando Aeronave com um piloto
+    public Aeronave (String m, String c, Piloto oPiloto, int param) {
+        this.oPiloto[param] = oPiloto;
         this.Modelo = m;
         this.Categoria = c;
     }
-
-    public Aeronave (Piloto oPiloto) {
-        this.oPiloto = oPiloto;
-        oPiloto.setAviao(this);
+    // cria uma aeronave, define o piloto dessa aeronave, e dps guarda essa aeronave em 
+    //algum espaço dentro do array de aeronaves em Piloto.java
+    public Aeronave (Piloto oPiloto, int param) {
+        this.oPiloto[param] = oPiloto;
+        oPiloto.setAviao(this,param);
     }
 
     public String getModelo() {
@@ -40,12 +40,12 @@ public class Aeronave {
         Categoria = categoria;
     }
 
-    public Piloto getoPiloto() {
-        return oPiloto;
+    public Piloto getoPiloto(int param) {
+        return oPiloto[param];
     }
-
-    public void setoPiloto(Piloto oPiloto) {
-        this.oPiloto = oPiloto;
+    // metodo para definir o piloto
+    public void setoPiloto(Piloto oPiloto, int param) {
+        this.oPiloto[param] = oPiloto;
     }
     
 }
