@@ -10,14 +10,16 @@ import Classe.Piloto;
 public class AppPilotos {
     public static void main(String[] args) throws InterruptedException, IOException {
         final int MAX_ELEMENTOS = 20;
-        int opcao, qtdCadastrados = 0, cont = 0 /* variavel de controle para os loops */;
+        int opcao, qtdCadastrados = 0, index = 0 /* variavel de controle para os loops */;
         int EspacoPadrao = MAX_ELEMENTOS; // como o nome diz é o padrão até ser alterado
         int EspacoDisponivel = EspacoPadrao; // espaço disponivel no vetor atual
+        Boolean trava = true; // uma trava para os loops, ela é desfeita com o break
         String regex = "[0-9]+"; // regex para permitir apenas digitos
 
         Pessoa[] pilotos = new Pessoa[MAX_ELEMENTOS];
         Pattern pa = Pattern.compile(regex);
         Scanner in = new Scanner(System.in);
+
         do {
             System.out.println("\n****\nMENU\n****\n");
             System.out.println("1 - Cadastrar piloto");
@@ -34,7 +36,12 @@ public class AppPilotos {
             if (opcao == 1) {
                 // Se não tem mais espaço no vetor, caio fora e também considera se é um novo
                 // vetor com tamanho diferente
+                
                 if (EspacoDisponivel <= 0) {
+                    System.out.println("\nNão há espaço para cadastrar novos pilotos.");
+                    voltarMenu(in);
+                    continue;
+                } else if (qtdCadastrados > MAX_ELEMENTOS) {
                     System.out.println("\nNão há espaço para cadastrar novos pilotos.");
                     voltarMenu(in);
                     continue;
@@ -47,52 +54,54 @@ public class AppPilotos {
                 String am; // modelo
                 String ac; // categoria
                 String res; // resposta "s" ou "n"
-                int tamanho = 0;
 
                 // loop 1: verifica se tem algo digitado, e verifica se o nome passar de 30
                 // caracteres
                 do {
                     System.out.println("\nNome(Max 30 caracteres)");
                     n = in.nextLine();
-                    tamanho = n.length();
-                    if (tamanho <= 0 || tamanho > 30) {
+                    if (n.length() <= 0 || n.length() > 30) {
                         System.out.println("\nNome invalido!!");
+                    } else {
+                        break;
                     }
-                } while (tamanho <= 0 || tamanho > 30);
+                } while (trava);
                 // loop 2: verifica se só tem numeros e também se são 12 numeros
                 do {
-                    System.out.println("\nCpf apenas digitos(12)");
+                    System.out.println("\nCpf apenas digitos(11)");
                     c = in.nextLine();
                     Matcher ma = pa.matcher(c);
                     if (ma.matches() && c.length() == 11) {
-                        tamanho = c.length();
+                        break;
                     } else {
                         System.out.println("\nCpf invalido!!");
                     }
-                } while (tamanho != 11);
+                } while (trava);
                 // loop 3: verifica se foi digitado algo
                 do {
                     System.out.println("\nBrevê");
                     b = in.nextLine();
-                    tamanho = b.length();
-                    if (tamanho < 1) {
+                    if (b.length() < 1) {
                         System.out.println("\nBrevê invalido!!");
+                    } else {
+                        break;
                     }
-                } while (tamanho <= 0);
+                } while (trava);
                 // loop 4: verifica se foi digitado algo
                 do {
                     System.out.println("\nMatricula");
                     m = in.nextLine();
-                    tamanho = m.length();
-                    if (tamanho < 1) {
+                    if (m.length() < 1) {
                         System.out.println("\nMatricula invalido!!");
+                    } else {
+                        break;
                     }
-                } while (tamanho <= 0);
+                } while (trava);
 
                 // desafio
+                
                 String qtdDeAvioesString;
                 int qtdDeAvioes = 0;
-                tamanho = 0;
                 Boolean tudoCerto = false;
                 // loop 5: verifica se foi digitado "s" ou "n", se "n" a varivael qtdDeAvioes
                 // fica em 0, se "s"
@@ -112,7 +121,7 @@ public class AppPilotos {
                                     qtdDeAvioes = Integer.parseInt(qtdDeAvioesString);
                                     if (qtdDeAvioes < 51) {
                                         tudoCerto = true;
-                                        tamanho = 1;
+                                        break;
                                     } else {
                                         System.out.println("\nQuantidade invalida!!: O valor deve ser no maximo 50");
                                     }
@@ -122,14 +131,13 @@ public class AppPilotos {
                             } else {
                                 System.out.println("\nQuantidade invalida!!: Por favor digite um valor");
                             }
-                        } while (!tudoCerto);
+                        } while (trava);
                     } else if (res.equals("n")) {
-                        tamanho = 1;
+                        break;
                     } else {
                         System.out.println("\nOpção invalida!!(use 's' ou 'n')");
-
                     }
-                } while (tamanho <= 0);
+                } while (!tudoCerto);
                 // verifica se vai cadastrar aviões ou não verificando a quantidade da variavel
                 // qtdDeAvioes,
                 // se Nâo ele cadastra normalmente, se sim ele bota os
@@ -138,39 +146,41 @@ public class AppPilotos {
 
                     Pessoa p1 = new Piloto(n, c, b, m);
                     // loop para cadastrar a quantidade passado no loop 5
-                    while (cont != qtdDeAvioes) {
+                    while (index != qtdDeAvioes) {
                         Aeronave a1 = new Aeronave();
-                        System.out.println("\nInformações do avião: " + (cont + 1));
+                        System.out.println("\nInformações do avião: " + (index + 1));
                         // cadastrando modelo em algum dos aviões
                         do {
                             System.out.println("\nModelo do avião");
                             am = in.nextLine();
 
-                            a1.setModelo(am);
-                            p1.getPiloto().setAviao(a1, cont);
-                            tamanho = am.length();
-                            if (tamanho < 1) {
+                            if (am.length() < 1) {
                                 System.out.println("\nModelo invalido!!");
+                            } else {
+                                a1.setModelo(am);
+                                p1.getPiloto().setAviao(a1, index);
+                                break;
                             }
-                        } while (tamanho <= 0);
+                        } while (trava);
                         // cadastrando categoria em algum dos aviões
                         do {
                             System.out.println("\nCategoria do avião");
                             ac = in.nextLine();
 
-                            a1.setCategoria(ac);
-                            p1.getPiloto().setAviao(a1, cont);
-                            tamanho = ac.length();
-                            if (tamanho < 1) {
+                            if (ac.length() < 1) {
                                 System.out.println("\nCategoria invalido!!");
+                            } else {
+                                a1.setCategoria(ac);
+                                p1.getPiloto().setAviao(a1, index);
+                                break;
                             }
-                        } while (tamanho <= 0);
+                        } while (trava);
                         p1.getPiloto().setAumentarQtdAviao();
-                        cont++;
+                        index++;
                     }
                     // cadastrando pilotos com aviões
                     pilotos[qtdCadastrados] = p1;
-                    cont = 0;
+                    index = 0;
                 } else {
                     // cadastrando pilotos normalmente sem os aviões
                     Pessoa p1 = new Piloto(n, c, b, m);
@@ -184,7 +194,7 @@ public class AppPilotos {
 
             // Listar pilotos cadastrados
             if (opcao == 2) {
-                int contAviao = 0;
+                int indexAviao = 0;
                 System.out.println("\nPilotos cadastrados atualmente: " + qtdCadastrados);
 
                 // Se não tem ninguém cadastrado no vetor, caio fora
@@ -194,60 +204,59 @@ public class AppPilotos {
                     continue;
                 }
                 // loop para exibição das informações
-                while (cont != qtdCadastrados) {
+                while (index != qtdCadastrados) {
 
                     System.out.printf(
                             "\n\nPiloto %s:|| nome: %s cpf: %s breve: %s matricula: %s",
-                            (cont + 1),
-                            pilotos[cont].getNome(), pilotos[cont].getCpf(),
-                            pilotos[cont].getPiloto().getBreve(), pilotos[cont].getPiloto().getMatricula());
+                            (index + 1),
+                            pilotos[index].getNome(), pilotos[index].getCpf(),
+                            pilotos[index].getPiloto().getBreve(), pilotos[index].getPiloto().getMatricula());
 
                     // se tiver aviões ele vai exibir
-                    if (pilotos[cont].getPiloto().checarSeTemAviao()) {
+                    if (pilotos[index].getPiloto().checarSeTemAviao()) {
                         System.out.println("\nAviões do piloto:");
                         // loop para exibir totos os aviões do piloto atual que esta sendo trabalhado
-                        while (contAviao != pilotos[cont].getPiloto().getQtdDeAvioesEspecifica()) {
-                            System.out.printf("\nAvião %s|| modelo: %s categoria: %s", (contAviao + 1),
-                                    pilotos[cont].getPiloto().getAviao(contAviao).getModelo(),
-                                    pilotos[cont].getPiloto().getAviao(contAviao).getCategoria());
-                            contAviao++;
+                        while (indexAviao != pilotos[index].getPiloto().getQtdDeAvioesEspecifica()) {
+                            System.out.printf("\nAvião %s|| modelo: %s categoria: %s", (indexAviao + 1),
+                                    pilotos[index].getPiloto().getAviao(indexAviao).getModelo(),
+                                    pilotos[index].getPiloto().getAviao(indexAviao).getCategoria());
+                            indexAviao++;
                         }
-                        contAviao = 0;
+                        indexAviao = 0;
                     }
                     System.out.println("\n--------------------------------------------------------------------------");
-                    cont++;
+                    index++;
                 }
 
-                cont = 0;
+                index = 0;
                 voltarMenu(in);
             }
             // Localizar piloto pelo CPF
             else if (opcao == 3) {
                 String CpfProcurado;
                 int PilotoProcurado = 0;
-                int tamanho = 0;
-                int contAviao = 0;
+                int indexAviao = 0;
                 // verifica se o cpf é valido para busca
                 do {
-                    System.out.println("\nQual cpf deseja encontrar?(12 digitos)");
+                    System.out.println("\nQual cpf deseja encontrar?(11 digitos)");
                     CpfProcurado = in.nextLine();
                     Matcher ma = pa.matcher(CpfProcurado);
                     if (ma.matches() && CpfProcurado.length() == 11) {
-                        tamanho = CpfProcurado.length();
+                        break;
                     } else {
                         System.out.println("\nCpf invalido!!");
                     }
-                } while (tamanho != 11);
+                } while (trava);
 
-                while (cont != qtdCadastrados) {
-                    if (pilotos[cont].getCpf().equals(CpfProcurado)) {
-                        PilotoProcurado = cont + 1;
-                        cont = qtdCadastrados;
+                while (index != qtdCadastrados) {
+                    if (pilotos[index].getCpf().equals(CpfProcurado)) {
+                        PilotoProcurado = index + 1;
+                        index = qtdCadastrados;
                     } else {
-                        cont++;
+                        index++;
                     }
                 }
-                cont = 0;
+                index = 0;
                 if (PilotoProcurado == 0) {
                     System.out.println("\nCpf não encontrado");
                     voltarMenu(in);
@@ -262,13 +271,13 @@ public class AppPilotos {
                     if (pilotos[PilotoProcurado - 1].getPiloto().checarSeTemAviao()) {
                         System.out.println("\nAviões do piloto:");
                         // loop para exibir totos os aviões do piloto atual que esta sendo trabalhado
-                        while (contAviao != pilotos[PilotoProcurado - 1].getPiloto().getQtdDeAvioesEspecifica()) {
-                            System.out.printf("\nAvião %s|| modelo: %s categoria: %s", (contAviao + 1),
-                                    pilotos[PilotoProcurado - 1].getPiloto().getAviao(contAviao).getModelo(),
-                                    pilotos[PilotoProcurado - 1].getPiloto().getAviao(contAviao).getCategoria());
-                            contAviao++;
+                        while (indexAviao != pilotos[PilotoProcurado - 1].getPiloto().getQtdDeAvioesEspecifica()) {
+                            System.out.printf("\nAvião %s|| modelo: %s categoria: %s", (indexAviao + 1),
+                                    pilotos[PilotoProcurado - 1].getPiloto().getAviao(indexAviao).getModelo(),
+                                    pilotos[PilotoProcurado - 1].getPiloto().getAviao(indexAviao).getCategoria());
+                            indexAviao++;
                         }
-                        contAviao = 0;
+                        indexAviao = 0;
                     }
                     voltarMenu(in);
                 }
@@ -291,19 +300,19 @@ public class AppPilotos {
 
                     Pessoa[] ArrayTemporario = new Pessoa[pilotos.length];
                     // passa os dados de pilotos para arrayTemporario
-                    while (cont != qtdCadastrados) {
-                        ArrayTemporario[cont] = pilotos[cont];
-                        cont++;
+                    while (index != qtdCadastrados) {
+                        ArrayTemporario[index] = pilotos[index];
+                        index++;
                     }
-                    cont = 0;
+                    index = 0;
 
                     pilotos = new Pessoa[NovoEspaço];
                     // devolve os dados de arrayTemporario para pilotos
-                    while (cont != qtdCadastrados) {
-                        pilotos[cont] = ArrayTemporario[cont];
-                        cont++;
+                    while (index != qtdCadastrados) {
+                        pilotos[index] = ArrayTemporario[index];
+                        index++;
                     }
-                    cont = 0;
+                    index = 0;
                     System.out.println("\nEspaço modificado com sucesso.");
                     voltarMenu(in);
                 } else {
