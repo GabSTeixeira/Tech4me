@@ -1,6 +1,6 @@
 package Classes;
 
-public class Venda Throws Exception {
+public class Venda {
     private String data;
     private Produto produto;
     private int QtdVendida;
