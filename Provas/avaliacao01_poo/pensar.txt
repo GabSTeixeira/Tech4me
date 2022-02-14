@@ -1,0 +1,27 @@
+Fiz isso aqui pra me ajudar a resolver os problemas que apareciam
+
+deveria ter usado for no lugar de while, dai não precisaria da variavel cont, tenho que ficar resetando ela pra 0
+depois de cada while que eu usar
+
+Bugs:
+
+transferencia/aumentar > cadastrar > aumentar > listar = erro: nullPointerException // array completamente vazio quando deveria ter dados.
+
+Correção: apliquei um if para quando for o segundo aumentar, ele transferir de NovaListaPilotos para um 
+array temporario e dps voltar pra NovaListaPilotos. Só que eu não botei um else, por isso ele resetava o array
+logo depois de fazer isso deixando o array vazio dnv, causando assim nullPointerException.
+
+
+transferencia/aumentar > cadastrar > cpf =  erro: nullPointerException //
+mesmo problema do de cima.
+
+
+
+atualização: mudei para não usar um array novo, mas sim sobreescrever array piloto com um novo tamanho,
+para não perder os dados eu passo os dados atuais de array piloto para um array temporario e dps devolvo pra piloto[]
+que esta de tamanho novo. NovaListaPilotos[] foi completamente excluido.
+
+
+atualização: agora precisa digitar um cpf só de numeros e com 11 digitos se não da errado.
+
+atualização: agora é possivel cadastrar Aeronaves para o piloto, e também exibir essas Aeronaves.
