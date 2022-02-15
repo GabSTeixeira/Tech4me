@@ -17,7 +17,7 @@ public class app {
     do {
       opcaoEscolhida = -1;
       inputTest = true;
-      voltarMenu(sc,false);
+      voltarMenu(sc, false);
       System.out.println("-----------------!MENU!-----------------");
       System.out.println("1 - Menu produto");
       System.out.println("2 - Menu venda");
@@ -66,13 +66,12 @@ public class app {
             temApenasDigitos = false;
 
             do {
-            System.out.print("Nome: ");
-            n = sc.nextLine();
-            if(n.length()>1) {
-              break;
-            }
-
-            } while(true);
+              System.out.print("Nome: ");
+              n = sc.nextLine();
+              if (n.length() > 1) {
+                break;
+              }
+            } while (true);
             do {
               System.out.print("Codigo: ");
               String str = sc.nextLine();
@@ -116,28 +115,27 @@ public class app {
               System.out.println("\nNão tem produtos cadastrados!!");
               voltarMenu(sc, true);
             } else {
+              achou = false;
+              String produtoBuscado = "";
 
-            achou = false;
-            String produtoBuscado = "";
-
-            System.out.println("Nome do produto que deseja buscar?");
-            String nomeBuscado = sc.nextLine();
-            for (Produto p : ProdutosListados) {
-              if (p.getNome().equalsIgnoreCase(nomeBuscado)) {
-                produtoBuscado = p.toString();
-                achou = true;
-                break;
+              System.out.println("Nome do produto que deseja buscar?");
+              String nomeBuscado = sc.nextLine();
+              for (Produto p : ProdutosListados) {
+                if (p.getNome().equalsIgnoreCase(nomeBuscado)) {
+                  produtoBuscado = p.toString();
+                  achou = true;
+                  break;
+                }
+              }
+              System.out.println("------------PRODUTO BUSCADO-------------");
+              if (!achou) {
+                System.out.println("\nProduto não encontrado!!");
+                voltarMenu(sc, true);
+              } else {
+                System.out.println("\n" + produtoBuscado);
+                voltarMenu(sc, true);
               }
             }
-            System.out.println("------------PRODUTO BUSCADO-------------");
-            if (!achou) {
-              System.out.println("\nProduto não encontrado!!");
-              voltarMenu(sc, true);
-            } else {
-              System.out.println("\n" + produtoBuscado);
-              voltarMenu(sc, true);
-            }
-           }
           } else if (opcaoEscolhida == 3) {
             // listar todos
             System.out.println("------------PRODUTOS LISTADOS-----------");
@@ -434,7 +432,7 @@ public class app {
               } else {
                 System.out.println("-----------VENDAS NO PERIODO------------");
                 double totalPeriodo = 0;
-                for (Venda v : VendasListadas) {   
+                for (Venda v : VendasListadas) {
                   if (dataInicial <= dataFinal) {
                     System.out.println(
                       "----------------------------------------"
@@ -444,13 +442,14 @@ public class app {
                   }
                 }
                 System.out.println("----------------------------------------");
-                System.out.println("Total em vendas no periodo: "+totalPeriodo);
+                System.out.println(
+                  "Total em vendas no periodo: " + totalPeriodo
+                );
                 voltarMenu(sc, true);
               }
             }
           } else {
-            System.out.println("\nOpção invalida!!");
-            voltarMenu(sc, true);
+            voltarMenu(sc, false);
           }
         }
         opcaoEscolhida = -1;
