@@ -26,7 +26,7 @@ public class Produto implements Comparable<Produto>{
 
     @Override
     public String toString () {
-        return String.format("|Codigo: %s |-x-| Nome: %s |-x-| Valor: %s |-x-| Estoque: %s",
+        return String.format("|Codigo: %s <> Nome: %s <> Valor: %s <> Estoque: %s",
         this.codigo,this.nome,this.valor,this.QtdEstoque);
     }
     @Override

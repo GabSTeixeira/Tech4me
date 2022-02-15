@@ -25,7 +25,7 @@ public class app {
             }
 
             if (opcaoEscolhida == 0) {
-                System.out.println("Programa finalizado!");
+                System.out.println("Programa finalizado!!");
                 break;
             }
             if (opcaoEscolhida == 1) { 
@@ -49,38 +49,52 @@ public class app {
 
                 if (opcaoEscolhida == 1) {
                     // incluir
-                    int c = 0;
+                    int c;
                     String n;
-                    double v = 0;
-                    int qt = 0;
+                    double v;
+                    int qtd;
+                    boolean temApenasDigitos = false;
 
                     System.out.print("Nome: ");
                     n = sc.nextLine();
-                    boolean testeInput = true;                    
-                    try {
+                                        
+                    do {
                         System.out.print("Codigo: ");
-                        c = sc.nextInt();
-                        sc.nextLine();
+                        String str = sc.nextLine();
+                     
+                        temApenasDigitos = str.matches("[+-]?\\d*");
+                        if(temApenasDigitos && str.length()>0) {
+                            c = Integer.parseInt(str);
+                            break;
+                        }
+                    }while(true);
+                     
+                    do {
+                    System.out.print("Valor: ");
+                        String str = sc.nextLine();
+                     
+                        temApenasDigitos = str.matches("[+-]?\\d*(\\.\\d+)?");
+                        if(temApenasDigitos&&str.length()>0) {
+                            v = Double.parseDouble(str);
+                            break;
+                        }
+                    } while(true);
 
-                        System.out.print("Valor: ");
-                        v = sc.nextDouble();
-                        sc.nextLine();
-
+                    do {
                         System.out.print("Quantidade: ");
-                        qt = sc.nextInt();
-                        sc.nextLine();
-
-                    } catch (InputMismatchException e) {
-                        System.out.println("\nInformações invalidas!!");
-                        testeInput = false;
-                        voltarMenu(sc);
-                        sc.nextLine();
-                    }
-                    if(testeInput) {
-                        ProdutosListados.add(new Produto(c,n,v,qt));
+                        String str = sc.nextLine();
+                     
+                        temApenasDigitos = str.matches("[+-]?\\d*");
+                        if(temApenasDigitos&&str.length()>0) {
+                            qtd = Integer.parseInt(str);
+                            break;
+                        }
+                    }while(true);
+                
+                    
+                        ProdutosListados.add(new Produto(c,n,v,qtd));
                         System.out.println("\nProduto cadastrado com sucesso!!");
                         voltarMenu(sc);                    
-                    }
                 } else if (opcaoEscolhida == 2) {
                     // buscar
                     
@@ -91,6 +105,8 @@ public class app {
 
                     boolean achou = false;
                     String produtoBuscado = "";
+
+                    System.out.println("Nome do produto que deseja buscar?");
                     String nomeBuscado = sc.nextLine();
                     for (Produto p: ProdutosListados) {
                         if(p.getNome().equalsIgnoreCase(nomeBuscado)){    
@@ -99,15 +115,26 @@ public class app {
                             break;
                         }
                     }
+                    System.out.println("------------PRODUTO BUSCADO-------------");
                     if(!achou){
-                        System.out.println("Produto não encontrado!!");
+                        System.out.println("\nProduto não encontrado!!");
                     } else {
-                        System.out.println(produtoBuscado);
+                        System.out.println("\n"+produtoBuscado);
                     }
                     
                     voltarMenu(sc);
                 } else if (opcaoEscolhida == 3) {
                     // listar todos
+                    System.out.println("------------PRODUTOS LISTADOS-----------");
+
+                    if(ProdutosListados.size() < 1) {
+                        System.out.println("\nNão há produtos cadastrados!!");
+                    }
+
+                    ProdutosListados.forEach(p -> System.out.println(p));
+                    
+                    
+                    voltarMenu(sc);
                 } else {
                     System.out.println("Opção invalida!!");
                     voltarMenu(sc);
