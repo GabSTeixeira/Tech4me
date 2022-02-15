@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import javax.swing.plaf.synth.SynthSeparatorUI;
 
 public class app {
 
@@ -13,11 +12,12 @@ public class app {
     ArrayList<Produto> ProdutosListados = new ArrayList<Produto>();
     ArrayList<Venda> VendasListadas = new ArrayList<Venda>();
     Scanner sc = new Scanner(System.in);
-    int opcaoEscolhida = -1;
     boolean inputTest, temApenasDigitos, achou;
+    int opcaoEscolhida;
     do {
+      opcaoEscolhida = -1;
       inputTest = true;
-      // voltarMenu(sc,false);
+      voltarMenu(sc,false);
       System.out.println("-----------------!MENU!-----------------");
       System.out.println("1 - Menu produto");
       System.out.println("2 - Menu venda");
@@ -37,7 +37,6 @@ public class app {
       if (opcaoEscolhida == 1) {
         // Menu produto
         voltarMenu(sc, false);
-        opcaoEscolhida = -1;
         System.out.println("-------------!MENU PRODUTO!-------------");
         System.out.println("1 - Incluir produto");
         System.out.println("2 - Consultar produto");
@@ -66,9 +65,14 @@ public class app {
             int qtd;
             temApenasDigitos = false;
 
+            do {
             System.out.print("Nome: ");
             n = sc.nextLine();
+            if(n.length()>1) {
+              break;
+            }
 
+            } while(true);
             do {
               System.out.print("Codigo: ");
               String str = sc.nextLine();
@@ -109,9 +113,9 @@ public class app {
             // buscar
 
             if (ProdutosListados.size() < 1) {
-              System.out.println("Não tem produtos cadastrados!!");
+              System.out.println("\nNão tem produtos cadastrados!!");
               voltarMenu(sc, true);
-            }
+            } else {
 
             achou = false;
             String produtoBuscado = "";
@@ -128,11 +132,12 @@ public class app {
             System.out.println("------------PRODUTO BUSCADO-------------");
             if (!achou) {
               System.out.println("\nProduto não encontrado!!");
+              voltarMenu(sc, true);
             } else {
               System.out.println("\n" + produtoBuscado);
+              voltarMenu(sc, true);
             }
-
-            voltarMenu(sc, true);
+           }
           } else if (opcaoEscolhida == 3) {
             // listar todos
             System.out.println("------------PRODUTOS LISTADOS-----------");
@@ -149,11 +154,11 @@ public class app {
             voltarMenu(sc, true);
           }
         }
+        opcaoEscolhida = -1;
       }
       if (opcaoEscolhida == 2) {
         // menu vendas
         voltarMenu(sc, false);
-        opcaoEscolhida = -1;
         System.out.println("-------------!MENU  VENDAS!-------------");
         System.out.println("1 - Realizar venda");
         System.out.println("2 - Vendas por período - detalhado");
@@ -205,7 +210,7 @@ public class app {
                   achou = true;
                 }
               }
-              // trata o produto encontrado
+              // tratar o produto encontrado
               if (achou) {
                 System.out.println(
                   "Produto encontrado: " +
@@ -220,7 +225,7 @@ public class app {
                 } else {
                   do {
                     System.out.println(
-                      "Deseja fazer uma venda para este produto? (s ou n)"
+                      "Deseja registrar uma venda para este produto? (s ou n)"
                     );
                     str = sc.nextLine();
 
@@ -244,7 +249,7 @@ public class app {
                     int ano = 0;
                     do {
                       System.out.println(
-                        "Quantos itens do determinado produto foram vendidos? (" +
+                        "Quantos itens deste produto foram vendidos? (" +
                         ProdutosListados.get(indice).getEstoque() +
                         " no estoque)"
                       );
@@ -315,6 +320,7 @@ public class app {
                         dia
                       )
                     );
+                    voltarMenu(sc, false);
                   }
                 }
               } else {
@@ -324,11 +330,130 @@ public class app {
             }
           } else if (opcaoEscolhida == 2) {
             // periodo detalhado
+            // input
+            String str;
+            int dia;
+            int mes;
+            int ano;
+            int dataInicial;
+            int dataFinal;
+
+            if (VendasListadas.size() < 1) {
+              System.out.println(
+                "\nERRO: não tem vendas registradas para mostrar"
+              );
+              voltarMenu(sc, true);
+            } else {
+              System.out.println("\nData inicial:");
+              do {
+                System.out.print("Dia: ");
+                str = sc.nextLine();
+                temApenasDigitos = str.matches("[+-]?\\d*");
+
+                if (temApenasDigitos && str.length() > 0) {
+                  dia = Integer.parseInt(str);
+                  if (dia > 0 && dia < 32) {
+                    break;
+                  }
+                }
+              } while (true);
+              do {
+                System.out.print("Mês: ");
+                str = sc.nextLine();
+                temApenasDigitos = str.matches("[+-]?\\d*");
+
+                if (temApenasDigitos && str.length() > 0) {
+                  mes = Integer.parseInt(str);
+                  if (mes > 0 && mes < 13) {
+                    break;
+                  }
+                }
+              } while (true);
+              do {
+                System.out.print("Ano: ");
+                str = sc.nextLine();
+                temApenasDigitos = str.matches("[+-]?\\d*");
+
+                if (temApenasDigitos && str.length() > 0) {
+                  ano = Integer.parseInt(str);
+                  if (ano > 1899 && ano < 2201) {
+                    break;
+                  }
+                }
+              } while (true);
+
+              str = ano + "" + mes + "" + dia;
+              dataInicial = Integer.parseInt(str);
+
+              System.out.println("\nData final:");
+              do {
+                System.out.print("Dia: ");
+                str = sc.nextLine();
+                temApenasDigitos = str.matches("[+-]?\\d*");
+
+                if (temApenasDigitos && str.length() > 0) {
+                  dia = Integer.parseInt(str);
+                  if (dia > 0 && dia < 32) {
+                    break;
+                  }
+                }
+              } while (true);
+              do {
+                System.out.print("Mês: ");
+                str = sc.nextLine();
+                temApenasDigitos = str.matches("[+-]?\\d*");
+
+                if (temApenasDigitos && str.length() > 0) {
+                  mes = Integer.parseInt(str);
+                  if (mes > 0 && mes < 13) {
+                    break;
+                  }
+                }
+              } while (true);
+              do {
+                System.out.print("Ano: ");
+                str = sc.nextLine();
+                temApenasDigitos = str.matches("[+-]?\\d*");
+
+                if (temApenasDigitos && str.length() > 0) {
+                  ano = Integer.parseInt(str);
+                  if (ano > 1899 && ano < 2201) {
+                    break;
+                  }
+                }
+              } while (true);
+
+              str = ano + "" + mes + "" + dia;
+              dataFinal = Integer.parseInt(str);
+
+              if (dataFinal < dataInicial) {
+                System.out.println(
+                  "\nERRO: a data final é menor que a data inicial"
+                );
+                voltarMenu(sc, true);
+              } else {
+                System.out.println("-----------VENDAS NO PERIODO------------");
+                double totalPeriodo = 0;
+                for (Venda v : VendasListadas) {   
+                  if (dataInicial <= dataFinal) {
+                    System.out.println(
+                      "----------------------------------------"
+                    );
+                    totalPeriodo += v.getTotalVendido();
+                    System.out.println(v);
+                  }
+                }
+                System.out.println("----------------------------------------");
+                System.out.println("Total em vendas no periodo: "+totalPeriodo);
+                voltarMenu(sc, true);
+              }
+            }
           } else {
             System.out.println("\nOpção invalida!!");
             voltarMenu(sc, true);
           }
         }
+        opcaoEscolhida = -1;
       }
     } while (true);
   }
