@@ -1,40 +1,46 @@
 package Classes;
 
-public class Produto implements Comparable<Produto>{
+public class Produto implements Comparable<Produto> {
     private int codigo;
     private String nome;
     private double valor;
     private int QtdEstoque;
 
-    public Produto (int c, String n, double v, int qtd) {
-        this.codigo = c;    
+    public Produto(int c, String n, double v, int qtd) {
+        this.codigo = c;
         this.nome = n;
         this.valor = v;
         this.QtdEstoque = qtd;
     }
-    public int getEstoque () {
+
+    public int getEstoque() {
         return this.QtdEstoque;
     }
 
-    public String getNome () {
+    public String getNome() {
         return this.nome;
     }
 
-    public double getValor () {
+    public double getValor() {
         return this.valor;
     }
 
-    @Override
-    public String toString () {
-        return String.format("|Codigo: %s <> Nome: %s <> Valor: %s <> Estoque: %s",
-        this.codigo,this.nome,this.valor,this.QtdEstoque);
+    public int getCodigo() {
+        return this.codigo;
     }
+
+    @Override
+    public String toString() {
+        return String.format("|Codigo: %s |<>| Nome: %s |<>| Valor: %s |<>| Estoque: %s",
+                this.codigo, this.nome, this.valor, this.QtdEstoque);
+    }
+
     @Override
     public int compareTo(Produto o) {
-        if(this.getValor() < o.getValor()) {
+        if (this.getCodigo() < o.getCodigo()) {
             return -1;
         }
-        if(this.getValor() > o.getValor()) {
+        if (this.getCodigo() > o.getCodigo()) {
             return 1;
         }
         return 0;
