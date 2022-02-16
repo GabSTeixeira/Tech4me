@@ -7,11 +7,11 @@ import java.util.Scanner;
 
 public class app {
 
-  public static void main(String[] args)
-    throws InterruptedException, IOException {
+  public static void main(String[] args) throws InterruptedException, IOException {
     ArrayList<Produto> ProdutosListados = new ArrayList<Produto>();
     ArrayList<Venda> VendasListadas = new ArrayList<Venda>();
     Scanner sc = new Scanner(System.in);
+    
     boolean inputTest, temApenasDigitos, achou;
     int opcaoEscolhida;
     do {
@@ -27,16 +27,16 @@ public class app {
         opcaoEscolhida = sc.nextInt();
         sc.nextLine();
       } catch (InputMismatchException e) {
-        System.out.println("Opção Invalida!!");
         voltarMenu(sc, true);
       }
+
       if (opcaoEscolhida == 0) {
         System.out.println("Programa finalizado!!");
         break;
       }
       if (opcaoEscolhida == 1) {
         // Menu produto
-        voltarMenu(sc, false);
+        voltarMenu(sc, false); // apaga a tela
         System.out.println("-------------!MENU PRODUTO!-------------");
         System.out.println("1 - Incluir produto");
         System.out.println("2 - Consultar produto");
@@ -52,17 +52,17 @@ public class app {
         sc.nextLine();
 
         if (!inputTest) {
-          System.out.println("\nOpção invalida!!");
+          System.out.println("\nOpção inválida!!");
           voltarMenu(sc, true);
-        } else {
+        } else {         
           if (opcaoEscolhida == 0) {
             voltarMenu(sc, false);
           } else if (opcaoEscolhida == 1) {
             // incluir
-            int c;
+            System.out.println("-----------CADASTRAR PRODUTO------------");
+            int c, qtd;
             String n;
             double v;
-            int qtd;
             temApenasDigitos = false;
 
             do {
@@ -72,8 +72,9 @@ public class app {
                 break;
               }
             } while (true);
+
             do {
-              System.out.print("Codigo: ");
+              System.out.print("Código: ");
               String str = sc.nextLine();
 
               temApenasDigitos = str.matches("[+-]?\\d*");
@@ -105,14 +106,16 @@ public class app {
               }
             } while (true);
 
+            //adicionar a arraylist
             ProdutosListados.add(new Produto(c, n, v, qtd));
             System.out.println("\nProduto cadastrado com sucesso!!");
             voltarMenu(sc, true);
           } else if (opcaoEscolhida == 2) {
-            // buscar
+            // buscar produto
+            System.out.println("------------PRODUTO BUSCADO-------------");
 
             if (ProdutosListados.size() < 1) {
-              System.out.println("\nNão tem produtos cadastrados!!");
+              System.out.println("\nERRO: não há produtos cadastrados!!");
               voltarMenu(sc, true);
             } else {
               achou = false;
@@ -120,6 +123,7 @@ public class app {
 
               System.out.println("Nome do produto que deseja buscar?");
               String nomeBuscado = sc.nextLine();
+              
               for (Produto p : ProdutosListados) {
                 if (p.getNome().equalsIgnoreCase(nomeBuscado)) {
                   produtoBuscado = p.toString();
@@ -127,9 +131,9 @@ public class app {
                   break;
                 }
               }
-              System.out.println("------------PRODUTO BUSCADO-------------");
+
               if (!achou) {
-                System.out.println("\nProduto não encontrado!!");
+                System.out.println("\nERRO: Produto não encontrado!!");
                 voltarMenu(sc, true);
               } else {
                 System.out.println("\n" + produtoBuscado);
@@ -141,12 +145,14 @@ public class app {
             System.out.println("------------PRODUTOS LISTADOS-----------");
 
             if (ProdutosListados.size() < 1) {
-              System.out.println("\nNão há produtos cadastrados!!");
-            }
-            ProdutosListados.sort(null);
-            ProdutosListados.forEach(p -> System.out.println(p));
+              System.out.println("\nERRO: não há produtos cadastrados!!");
+              voltarMenu(sc, true);
+            } else {
+              ProdutosListados.sort(null);
+              ProdutosListados.forEach(p -> System.out.println(p));
 
-            voltarMenu(sc, true);
+              voltarMenu(sc, true);
+            }
           } else {
             System.out.println("Opção invalida!!");
             voltarMenu(sc, true);
@@ -186,12 +192,12 @@ public class app {
             temApenasDigitos = false;
 
             if (ProdutosListados.size() < 1) {
-              System.out.println("\nNão tem intens cadastrados!!");
+              System.out.println("\nERRO: Não há produtos cadastrados!!");
               voltarMenu(sc, true);
             } else {
               // input do codigo a ser buscado
               do {
-                System.out.print("Codigo do item que foi vendido: ");
+                System.out.print("Código do item que foi vendido: ");
                 str = sc.nextLine();
 
                 temApenasDigitos = str.matches("[+-]?\\d*");
@@ -200,7 +206,7 @@ public class app {
                   break;
                 }
               } while (true);
-              //procura pelo produto
+              // procura pelo produto
               int indice = -1;
               for (Produto p : ProdutosListados) {
                 if (p.getCodigo() == codigoProcurado) {
@@ -211,16 +217,17 @@ public class app {
               // tratar o produto encontrado
               if (achou) {
                 System.out.println(
-                  "Produto encontrado: " +
+                  "\nProduto encontrado: " +
                   ProdutosListados.get(indice).getNome() +
                   "\n"
                 );
                 if (ProdutosListados.get(indice).getEstoque() < 1) {
                   System.out.println(
-                    "Erro: não é possivel cadastrar uma venda para um produto sem estoque"
+                    "ERRO: não é possivel cadastrar uma venda para um produto sem estoque"
                   );
                   voltarMenu(sc, true);
                 } else {
+                  
                   do {
                     System.out.println(
                       "Deseja registrar uma venda para este produto? (s ou n)"
@@ -240,7 +247,7 @@ public class app {
                   if (str.equals("n")) {
                     voltarMenu(sc, false);
                   } else if (str.equals("s")) {
-                    //variaveis para cadastrar vendas
+                    // variaveis para cadastrar vendas
                     int qtdVendida = 0;
                     int dia = 0;
                     int mes = 0;
@@ -256,14 +263,11 @@ public class app {
                       temApenasDigitos = str.matches("[+-]?\\d*");
                       if (temApenasDigitos && str.length() > 0) {
                         qtdVendida = Integer.parseInt(str);
-                        if (
-                          qtdVendida <=
-                          ProdutosListados.get(indice).getEstoque()
-                        ) {
+                        if (qtdVendida<=ProdutosListados.get(indice).getEstoque()) {
                           break;
                         } else {
                           System.out.println(
-                            "\nERRO: O numero de produtos vendidos deve ser menor ou igual a quantidade disponivel em estoque\n"
+                            "\nERRO: O número de produtos vendidos deve ser menor ou igual a quantidade disponível em estoque\n"
                           );
                         }
                       }
@@ -285,6 +289,7 @@ public class app {
                         }
                       }
                     } while (true);
+
                     do {
                       System.out.print("Mês: ");
                       str = sc.nextLine();
@@ -297,6 +302,7 @@ public class app {
                         }
                       }
                     } while (true);
+
                     do {
                       System.out.print("Ano: ");
                       str = sc.nextLine();
@@ -328,13 +334,10 @@ public class app {
             }
           } else if (opcaoEscolhida == 2) {
             // periodo detalhado
-            // input
+            // variaveis para o input
             String str;
-            int dia;
-            int mes;
-            int ano;
-            int dataInicial;
-            int dataFinal;
+            int dia,mes,ano;
+            int dataInicial,dataFinal;
 
             if (VendasListadas.size() < 1) {
               System.out.println(
@@ -355,6 +358,7 @@ public class app {
                   }
                 }
               } while (true);
+
               do {
                 System.out.print("Mês: ");
                 str = sc.nextLine();
@@ -367,6 +371,7 @@ public class app {
                   }
                 }
               } while (true);
+              
               do {
                 System.out.print("Ano: ");
                 str = sc.nextLine();
@@ -396,6 +401,7 @@ public class app {
                   }
                 }
               } while (true);
+              
               do {
                 System.out.print("Mês: ");
                 str = sc.nextLine();
@@ -408,6 +414,7 @@ public class app {
                   }
                 }
               } while (true);
+              
               do {
                 System.out.print("Ano: ");
                 str = sc.nextLine();
@@ -432,6 +439,8 @@ public class app {
               } else {
                 System.out.println("-----------VENDAS NO PERIODO------------");
                 double totalPeriodo = 0;
+                
+                //loop pra exibição 
                 for (Venda v : VendasListadas) {
                   if (dataInicial <= dataFinal) {
                     System.out.println(
