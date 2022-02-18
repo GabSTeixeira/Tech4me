@@ -67,7 +67,6 @@ public class app {
           } else {
             if (opcaoEscolhida == 0) {
               break;
-              //voltarMenu(sc, false);
             } else if (opcaoEscolhida == 1) {
               // incluir
               System.out.println("-----------CADASTRAR PRODUTO------------");
@@ -87,11 +86,24 @@ public class app {
               do {
                 System.out.print("Código: ");
                 String inputString = sc.nextLine();
+                Boolean codigoValido = true;
 
                 temApenasDigitos = inputString.matches("[+-]?\\d*");
                 if (temApenasDigitos && inputString.length() > 0) {
                   c = Integer.parseInt(inputString);
-                  break;
+                  
+                  for(Produto p : ProdutosListados){
+                    if(p.getCodigo() == c) {
+                      codigoValido = false;
+                      break;
+                    }
+                  }
+                  if(codigoValido) {
+                    break;
+                  } else {
+                    System.out.println("\nERRO: Este código já foi usado para outro produto\n");
+                  }
+
                 }
               } while (true);
 
@@ -121,6 +133,7 @@ public class app {
               ProdutosListados.add(new Produto(c, n, v, qtd));
               System.out.println("\nProduto cadastrado com sucesso!!");
               voltarMenu(sc, true);
+
             } else if (opcaoEscolhida == 2) {
               // buscar produto
               System.out.println("------------PRODUTO BUSCADO-------------");
@@ -129,27 +142,24 @@ public class app {
                 System.out.println("\nERRO: Não há produtos cadastrados!!");
                 voltarMenu(sc, true);
               } else {
-                achou = false;
-                String produtoBuscado = "";
-
                 System.out.println("Nome do produto que deseja buscar?");
                 String nomeBuscado = sc.nextLine();
-
-                for (Produto p : ProdutosListados) {
-                  if (p.getNome().equalsIgnoreCase(nomeBuscado)) {
-                    produtoBuscado = p.toString();
-                    achou = true;
-                    break;
+                
+                System.out.println("-----------PRODUTO ENCONTRADO-----------");
+                long contador = ProdutosListados.stream().filter(p->{
+                    if(p.getNome().equalsIgnoreCase(nomeBuscado)&& p instanceof Produto){
+                      System.out.println(p);
+                      return true;
+                    } else {
+                      return false;
+                    }
                   }
-                }
+                ).collect(Collectors.counting());
 
-                if (!achou) {
-                  System.out.println("\nERRO: Produto não encontrado!!");
-                  voltarMenu(sc, true);
-                } else {
-                  System.out.println("\n" + produtoBuscado);
-                  voltarMenu(sc, true);
-                }
+                if(contador==0) {
+                  System.out.println("\nProduto não encontrado!!");
+                 }
+                 voltarMenu(sc, true);
               }
             } else if (opcaoEscolhida == 3) {
               // listar todos
@@ -181,6 +191,7 @@ public class app {
           System.out.println("-------------!MENU  VENDAS!-------------");
           System.out.println("1 - Realizar venda");
           System.out.println("2 - Vendas por período - detalhado");
+          System.out.println("3 - Listar todas as vendas");
           System.out.println("0 - Voltar menu");
           System.out.print("opção: ");
 
@@ -334,7 +345,7 @@ public class app {
 
               if (VendasListadas.size() < 1) {
                 System.out.println(
-                  "\nERRO: Não tem vendas registradas para mostrar"
+                  "\nERRO: Não há vendas registradas para mostrar"
                 );
                 voltarMenu(sc, true);
               } else {
@@ -421,16 +432,24 @@ public class app {
                       InformacoesPeriodo.getSum()
                     );
                   }
-
                   voltarMenu(sc, true);
                 }
               }
+            } else if (opcaoEscolhida == 3) {
+              System.out.println("------------TODAS AS VENDAS-------------");
+      
+              if(VendasListadas.size() < 1) {
+                System.out.println("\nNão há vendas cadastradas");
+              } else {
+                VendasListadas.stream().forEach(System.out::println);  
+              }
+              voltarMenu(sc, true); 
             } else {
               voltarMenu(sc, false);
             }
           }
         }
-      } else {
+      }  else {
         voltarMenu(sc, false);
       }
     } while (true);
