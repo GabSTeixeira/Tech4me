@@ -46,11 +46,11 @@ public class Produto implements Comparable<Produto> {
   }
 
   @Override
-  public int compareTo(Produto o) {
-    if (this.getCodigo() < o.getCodigo()) {
+  public int compareTo(Produto p) {
+    if (this.getCodigo() < p.getCodigo()) {
       return -1;
     }
-    if (this.getCodigo() > o.getCodigo()) {
+    if (this.getCodigo() > p.getCodigo()) {
       return 1;
     }
     return 0;

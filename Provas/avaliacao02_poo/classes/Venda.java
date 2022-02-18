@@ -2,6 +2,7 @@ package Classes;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Venda {
 
@@ -10,27 +11,24 @@ public class Venda {
   private Produto produto;
   private int QtdVendida;
 
-  public Venda(Produto produto, int QtdVendida) {
+
+  public Venda(Produto produto, int QtdVendida, Date datainfo) {
     this.produto = produto;
     this.QtdVendida = QtdVendida;
+    data.setTime(datainfo);
   }
 
-  public Venda(Produto produto, int QtdVendida, int year, int month, int date) {
-    this.produto = produto;
-    this.QtdVendida = QtdVendida;
-    this.setData(year, month - 1, date);
-  }
+  public boolean comparaDataEntre(Date inicio, Date termino) {
+   if(data.getTime().compareTo(inicio)>=0&&data.getTime().compareTo(termino)<=0) {
+     return true;
+   } else {
+     return false;
+   }
 
-  public int getDataComparavel() {
-    return Integer.parseInt(data.get(Calendar.YEAR)+""+data.get(Calendar.MONTH)+""+data.get(Calendar.DAY_OF_MONTH));
   }
   public String getData() {
     return sdf.format(data.getTime());
 
-  }
-
-  public void setData(int y, int m, int d) {
-    data.set(y, m - 1, d);
   }
 
   public double getTotalVendido () {
@@ -39,11 +37,12 @@ public class Venda {
 
   @Override
   public String toString () {
-    return String.format("|Codigo: %s |<>| Nome: %s |<>| Valor: %s |<>| Qtd Vendida: %s |<>| Total: %s",
+    return String.format("|Codigo: %s |<>| Nome: %s |<>| Valor: %s |<>| Qtd Vendida: %s |<>| Data: %s |<>| Total: %s",
     this.produto.getCodigo(),
     this.produto.getNome(),
     this.produto.getValor(),
     this.QtdVendida,
+    this.getData(),
     this.getTotalVendido());
   }
 }
