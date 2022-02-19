@@ -1,11 +1,12 @@
 package Classes;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Venda {
-
+public class Venda implements Comparable<Venda>{
+  private DecimalFormat df = new DecimalFormat("#.##");
   private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
   private Calendar data = Calendar.getInstance();
   private Produto produto;
@@ -31,18 +32,36 @@ public class Venda {
 
   }
 
+  public Calendar getDataComparavel () {
+    return this.data;
+  }
+
   public double getTotalVendido () {
     return (double) this.QtdVendida * this.produto.getValor();
   }
 
+  public String getTotalVendidoDecimal () {
+    return df.format(this.QtdVendida * this.produto.getValor());
+  }
+  
+  @Override
+  public int compareTo(Venda o) {
+    if(this.data.compareTo(o.getDataComparavel())> 0) {
+      return -1;
+    }
+
+    return 1;
+  }
+  
   @Override
   public String toString () {
-    return String.format("|Codigo: %s |<>| Nome: %s |<>| Valor: %s |<>| Qtd Vendida: %s |<>| Data: %s |<>| Total: %s",
-    this.produto.getCodigo(),
-    this.produto.getNome(),
-    this.produto.getValor(),
-    this.QtdVendida,
+    return String.format("|Data: %s |<>| Nome: %s |<>| Valor: %s |<>| Qtd Vendida: %s |<>| Código: %s |<>| Total: %s",
     this.getData(),
-    this.getTotalVendido());
+    this.produto.getNome(),
+    df.format(this.produto.getValor()),
+    this.QtdVendida,
+    this.produto.getCodigo(),
+    this.getTotalVendidoDecimal());
   }
+  
 }

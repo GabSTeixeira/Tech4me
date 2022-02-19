@@ -1,7 +1,9 @@
 package Classes;
 
-public class Produto implements Comparable<Produto> {
+import java.text.DecimalFormat;
 
+public class Produto implements Comparable<Produto> {
+  private DecimalFormat df = new DecimalFormat("#.##");
   private int codigo;
   private String nome;
   private double valor;
@@ -37,13 +39,15 @@ public class Produto implements Comparable<Produto> {
   @Override
   public String toString() {
     return String.format(
-      "|Codigo: %s |<>| Nome: %s |<>| Valor: %s |<>| Estoque: %s",
+      "|Código: %s |<>| Nome: %s |<>| Valor: %s |<>| Estoque: %s",
       this.codigo,
       this.nome,
-      this.valor,
+      df.format(this.valor),
       this.QtdEstoque
     );
   }
+
+
 
   @Override
   public int compareTo(Produto p) {

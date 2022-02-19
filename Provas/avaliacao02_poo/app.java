@@ -1,6 +1,7 @@
 import Classes.Produto;
 import Classes.Venda;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class app {
     throws InterruptedException, IOException, ParseException {
     ArrayList<Produto> ProdutosListados = new ArrayList<Produto>();
     ArrayList<Venda> VendasListadas = new ArrayList<Venda>();
+    DecimalFormat df = new DecimalFormat("#.##");
     Scanner sc = new Scanner(System.in);
 
     boolean inputTest, temApenasDigitos, achou;
@@ -46,7 +48,7 @@ public class app {
         while (true) {
           opcaoEscolhida = -1;
           inputTest = true;
-          voltarMenu(sc, false); // apaga a tela
+          voltarMenu(sc, false);
           System.out.println("-------------!MENU PRODUTO!-------------");
           System.out.println("1 - Incluir produto");
           System.out.println("2 - Consultar produto");
@@ -91,19 +93,20 @@ public class app {
                 temApenasDigitos = inputString.matches("[+-]?\\d*");
                 if (temApenasDigitos && inputString.length() > 0) {
                   c = Integer.parseInt(inputString);
-                  
-                  for(Produto p : ProdutosListados){
-                    if(p.getCodigo() == c) {
+
+                  for (Produto p : ProdutosListados) {
+                    if (p.getCodigo() == c) {
                       codigoValido = false;
                       break;
                     }
                   }
-                  if(codigoValido) {
+                  if (codigoValido) {
                     break;
                   } else {
-                    System.out.println("\nERRO: Este código já foi usado para outro produto\n");
+                    System.out.println(
+                      "\nERRO: Este código já foi ultilizado para outro produto!!\n"
+                    );
                   }
-
                 }
               } while (true);
 
@@ -131,9 +134,9 @@ public class app {
 
               //adicionar a arraylist
               ProdutosListados.add(new Produto(c, n, v, qtd));
+              ProdutosListados.sort(null);
               System.out.println("\nProduto cadastrado com sucesso!!");
               voltarMenu(sc, true);
-
             } else if (opcaoEscolhida == 2) {
               // buscar produto
               System.out.println("------------PRODUTO BUSCADO-------------");
@@ -144,22 +147,29 @@ public class app {
               } else {
                 System.out.println("Nome do produto que deseja buscar?");
                 String nomeBuscado = sc.nextLine();
-                
-                System.out.println("-----------PRODUTO ENCONTRADO-----------");
-                long contador = ProdutosListados.stream().filter(p->{
-                    if(p.getNome().equalsIgnoreCase(nomeBuscado)&& p instanceof Produto){
-                      System.out.println(p);
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  }
-                ).collect(Collectors.counting());
 
-                if(contador==0) {
+                System.out.println("-----------PRODUTO ENCONTRADO-----------");
+                long contador = ProdutosListados
+                  .stream()
+                  .filter(
+                    p -> {
+                      if (
+                        p.getNome().equalsIgnoreCase(nomeBuscado) &&
+                        p instanceof Produto
+                      ) {
+                        System.out.println(p);
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    }
+                  )
+                  .collect(Collectors.counting());
+
+                if (contador == 0) {
                   System.out.println("\nProduto não encontrado!!");
-                 }
-                 voltarMenu(sc, true);
+                }
+                voltarMenu(sc, true);
               }
             } else if (opcaoEscolhida == 3) {
               // listar todos
@@ -169,8 +179,32 @@ public class app {
                 System.out.println("\nERRO: Não há produtos cadastrados!!");
                 voltarMenu(sc, true);
               } else {
-                ProdutosListados.sort(null);
-                ProdutosListados.forEach(p -> System.out.println(p));
+                DoubleSummaryStatistics InformacoesGeraisProdutos = ProdutosListados
+                  .stream()
+                  .map(
+                    p -> {
+                      if (p instanceof Produto) {
+                        System.out.println(
+                          "--------------------------------------------------------------------------------------------------------------"
+                        );
+                        System.out.println(p);
+                        return p;
+                      } else {
+                        return null;
+                      }
+                    }
+                  )
+                  .collect(Collectors.summarizingDouble(Produto::getValor));
+                System.out.println(
+                  "--------------------------------------------------------------------------------------------------------------"
+                );
+                System.out.printf(
+                  "|Qtd Produtos: %s |<>| Valor médio(R$): %s |<>| Valor máximo(R$) %s |<>| Valor minimo(R$) %s\n",
+                  InformacoesGeraisProdutos.getCount(),
+                  df.format(InformacoesGeraisProdutos.getAverage()),
+                  df.format(InformacoesGeraisProdutos.getMax()),
+                  df.format(InformacoesGeraisProdutos.getMin())
+                );
 
                 voltarMenu(sc, true);
               }
@@ -295,7 +329,7 @@ public class app {
                             break;
                           } else {
                             System.out.println(
-                              "\nERRO: O número de produtos vendidos deve ser menor ou igual a quantidade disponível em estoque\n"
+                              "\nERRO: O número de produtos vendidos deve ser menor ou igual a quantidade disponível em estoque!!\n"
                             );
                           }
                         }
@@ -328,7 +362,11 @@ public class app {
                         )
                       );
 
-                      voltarMenu(sc, false);
+                      //deixar em ordem por datas
+                      VendasListadas.sort(null);
+
+                      System.out.println("\nVenda cadastrada com sucesso!!");
+                      voltarMenu(sc, true);
                     }
                   }
                 } else {
@@ -339,13 +377,13 @@ public class app {
             } else if (opcaoEscolhida == 2) {
               // periodo detalhado
               // variaveis para o input
-              System.out.println("-----------VENDAS NO PERIODO------------");
+              System.out.println("-----------VENDAS NO PERÍODO------------");
               String inputString;
               Date dataInicial, dataFinal;
 
               if (VendasListadas.size() < 1) {
                 System.out.println(
-                  "\nERRO: Não há vendas registradas para mostrar"
+                  "\nERRO: Não há vendas registradas para mostrar!!"
                 );
                 voltarMenu(sc, true);
               } else {
@@ -353,7 +391,7 @@ public class app {
 
                 do {
                   System.out.println(
-                    "Qual a data inicial do periodo? (dd/mm/aaaa)"
+                    "Qual a data inicial do período? (dd/mm/aaaa)"
                   );
                   inputString = sc.nextLine();
 
@@ -369,7 +407,7 @@ public class app {
 
                 do {
                   System.out.println(
-                    "Qual a data final do periodo? (dd/mm/aaaa)"
+                    "Qual a data final do período? (dd/mm/aaaa)"
                   );
                   inputString = sc.nextLine();
 
@@ -387,14 +425,19 @@ public class app {
                   );
                   voltarMenu(sc, true);
                 } else {
-                  System.out.println(
-                    "-----------VENDAS NO PERIODO------------"
+                  System.out.print("-----------VENDAS NO PERÍODO------------");
+                  System.out.print(
+                    " Período: " +
+                    converterDatePraString(dataInicial) +
+                    " - " +
+                    converterDatePraString(dataFinal) +
+                    "\n"
                   );
-
                   // um loop mt loco em stream q imprime e calcula tudo, ou não faz nada se não achar a condição do filtro
                   DoubleSummaryStatistics InformacoesPeriodo = VendasListadas
                     .stream()
-                    .filter( p -> {
+                    .filter(
+                      p -> {
                         if (
                           (dataFinal.compareTo(dataInicial) >= 0) &&
                           p instanceof Venda &&
@@ -419,37 +462,71 @@ public class app {
                   );
                   if (InformacoesPeriodo.getCount() == 0) {
                     System.out.println(
-                      "\nERRO: Não há vendas registradas nesse periodo\n"
+                      "\nERRO: Não há vendas registradas nesse período!!\n"
                     );
                   } else {
                     // usar stream é mt daora
+
                     System.out.printf(
-                      "Vendas: %s Media: %s Menor Venda($): %s Maior venda($): %s Total($): %s\n",
+                      "|Vendas: %s |<>| Média(R$): %s |<>| Menor Venda(R$): %s |<>| Maior venda(R$): %s |<>| Total(R$): %s\n",
                       InformacoesPeriodo.getCount(),
-                      InformacoesPeriodo.getAverage(),
-                      InformacoesPeriodo.getMin(),
-                      InformacoesPeriodo.getMax(),
-                      InformacoesPeriodo.getSum()
+                      df.format(InformacoesPeriodo.getAverage()),
+                      df.format(InformacoesPeriodo.getMin()),
+                      df.format(InformacoesPeriodo.getMax()),
+                      df.format(InformacoesPeriodo.getSum())
                     );
                   }
                   voltarMenu(sc, true);
                 }
               }
             } else if (opcaoEscolhida == 3) {
+              // todas as vendas
               System.out.println("------------TODAS AS VENDAS-------------");
-      
-              if(VendasListadas.size() < 1) {
-                System.out.println("\nNão há vendas cadastradas");
+
+              if (VendasListadas.size() < 1) {
+                System.out.println(
+                  "\nERRO: Não há vendas registradas para mostrar!!"
+                );
               } else {
-                VendasListadas.stream().forEach(System.out::println);  
+                // imprimir tudo e pegar as informações
+                DoubleSummaryStatistics InformacoesGerais = VendasListadas
+                  .stream()
+                  .map(
+                    p -> {
+                      if (p instanceof Venda) {
+                        System.out.println(
+                          "--------------------------------------------------------------------------------------------------------------"
+                        );
+                        System.out.println(p);
+                        return p;
+                      } else {
+                        return null;
+                      }
+                    }
+                  )
+                  .collect(
+                    Collectors.summarizingDouble(Venda::getTotalVendido)
+                  );
+                System.out.println(
+                  "--------------------------------------------------------------------------------------------------------------"
+                );
+                System.out.printf(
+                  "|Vendas: %s |<>| Média(R$): %s |<>| Menor Venda(R$): %s |<>| Maior venda(R$): %s |<>| Total(R$): %s\n",
+                  InformacoesGerais.getCount(),
+                  df.format(InformacoesGerais.getAverage()),
+                  df.format(InformacoesGerais.getMin()),
+                  df.format(InformacoesGerais.getMax()),
+                  df.format(InformacoesGerais.getSum())
+                );
               }
-              voltarMenu(sc, true); 
+
+              voltarMenu(sc, true);
             } else {
               voltarMenu(sc, false);
             }
           }
         }
-      }  else {
+      } else {
         voltarMenu(sc, false);
       }
     } while (true);
@@ -502,5 +579,10 @@ public class app {
   public static Date converterStringPraDate(String data) throws ParseException {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     return sdf.parse(data);
+  }
+
+  public static String converterDatePraString(Date data) {
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    return sdf.format(data);
   }
 }
