@@ -171,7 +171,7 @@ public class app {
                     p -> {
                       if (p instanceof Produto) {
                         System.out.println(
-                            "--------------------------------------------------------------------------------------------------------------");
+                            "-----------------------------------------------------------------------");
                         System.out.println(p);
                         return p;
                       } else {
@@ -180,9 +180,9 @@ public class app {
                     })
                 .collect(Collectors.summarizingDouble(Produto::getValor));
             System.out.println(
-                "--------------------------------------------------------------------------------------------------------------");
+                "-----------------------------------------------------------------------");
             System.out.printf(
-                "|Qtd Produtos: %s |<>| Valor médio(R$): %s |<>| Valor máximo(R$): %s |<>| Valor minimo(R$): %s\n",
+                "|Qtd Produtos: %s |<>| Valor médio(R$): %s\n|Valor máximo(R$): %s |<>| Valor minimo(R$): %s\n",
                 InformacoesGeraisProdutos.getCount(),
                 df.format(InformacoesGeraisProdutos.getAverage()),
                 df.format(InformacoesGeraisProdutos.getMax()),
@@ -392,7 +392,7 @@ public class app {
                     converterDatePraString(dataInicial) +
                     " - " +
                     converterDatePraString(dataFinal) +
-                    "\n");
+                    " -----------VENDAS NO PERÍODO------------\n");
             // um loop mt loco em stream q imprime e calcula tudo, ou não faz nada se não
             // achar a condição do filtro
             DoubleSummaryStatistics InformacoesPeriodo = VendasListadas
@@ -403,7 +403,7 @@ public class app {
                           p instanceof Venda &&
                           p.comparaDataEntre(dataInicial, dataFinal)) {
                         System.out.println(
-                            "--------------------------------------------------------------------------------------------------------------");
+                            "------------------------------------------------------------------------------------------------------------------");
                         System.out.println(p);
                         return true;
                       } else {
@@ -414,7 +414,7 @@ public class app {
                     Collectors.summarizingDouble(Venda::getTotalVendido));
 
             System.out.println(
-                "--------------------------------------------------------------------------------------------------------------");
+                "------------------------------------------------------------------------------------------------------------------");
 
             if (InformacoesPeriodo.getCount() == 0) {
               System.out.println(
@@ -450,7 +450,7 @@ public class app {
                     p -> {
                       if (p instanceof Venda) {
                         System.out.println(
-                            "--------------------------------------------------------------------------------------------------------------");
+                            "------------------------------------------------------------------------------------------------------------------");
                         System.out.println(p);
                         return p;
                       } else {
@@ -460,7 +460,7 @@ public class app {
                 .collect(
                     Collectors.summarizingDouble(Venda::getTotalVendido));
             System.out.println(
-                "--------------------------------------------------------------------------------------------------------------");
+                "------------------------------------------------------------------------------------------------------------------");
             System.out.printf(
                 "|Vendas: %s |<>| Média(R$): %s |<>| Menor Venda(R$): %s |<>| Maior venda(R$): %s |<>| Total(R$): %s\n",
                 InformacoesGerais.getCount(),
