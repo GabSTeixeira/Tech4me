@@ -511,7 +511,7 @@ public class app {
 
       if ((dia > 0 && dia <= 31) &&
           (mes > 0 && mes <= 12) &&
-          (ano > 1990 && ano <= 2022)) {
+          (ano > 1990 && ano <= 2030)) {
         return true;
       } else {
         return false;
