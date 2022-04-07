@@ -9,8 +9,9 @@ public interface MusicService {
     // crud
 
     Optional<MusicDto> createMusicDocument (MusicDto music);
+    Optional<List<MusicDto>> createManyMusicDocument (List<MusicDto> musics);
     Optional<MusicDto> getMusicDocument (String id);
     Optional<MusicDto> updateMusicDocument (String id, MusicDto music);
     Optional<MusicDto> deleteMusicDocument (String id);
-    List<MusicDto> getTodos ();
+    Optional<List<MusicDto>> getAllMusicDocument ();
 }

@@ -26,12 +26,26 @@ public class MusicServiceImpl implements MusicService {
     @Override
     public Optional<MusicDto> createMusicDocument(MusicDto music) {
         
-        Music DocumentMusic = ApiMapper.map(music, Music.class);
-        Music DocumentMusicResponse = repository.save(DocumentMusic);
+        Music documentMusic = ApiMapper.map(music, Music.class);
+        Music documentMusicResponse = repository.save(documentMusic);
         
-        return Optional.of(ApiMapper.map(DocumentMusicResponse, MusicDto.class));
+        return Optional.of(ApiMapper.map(documentMusicResponse, MusicDto.class));
 
     }
+
+    @Override
+    public Optional<List<MusicDto>> createManyMusicDocument(List<MusicDto> musics) {
+        
+        List<Music> documentListMusic = musics.stream().map(m -> ApiMapper.map(m, Music.class))
+        .collect(Collectors.toList());
+
+        List<Music> documentListMusicResponse = repository.saveAll(documentListMusic);
+        
+        List<MusicDto> documentListMusicDtoResponse = documentListMusicResponse.stream()
+        .map(m -> ApiMapper.map(m, MusicDto.class)).collect(Collectors.toList());
+
+        return Optional.of(documentListMusicDtoResponse);
+    }   
 
     @Override
     public Optional<MusicDto> getMusicDocument(String id) {
@@ -46,39 +60,43 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    public Optional<List<MusicDto>> getAllMusicDocument() {
+        
+        if(repository.count() <= 0) {
+            return Optional.empty();
+        }
+
+        return Optional.of(repository.findAll().stream().map(m -> ApiMapper.map(m,MusicDto.class)).collect(Collectors.toList()));
+    } 
+
+    @Override
     public Optional<MusicDto> updateMusicDocument(String id, MusicDto music) {
         
        if(repository.findById(id).isEmpty()) {
            return Optional.empty();
        }
 
-       Music DocumentMusic =  ApiMapper.map(music, Music.class);
-       DocumentMusic.setId(id);
+       Music documentMusic =  ApiMapper.map(music, Music.class);
+       documentMusic.setId(id);
 
-       Music DocumentMusicResponse = repository.save(DocumentMusic);
+       Music documentMusicResponse = repository.save(documentMusic);
        
-       return Optional.of(ApiMapper.map(DocumentMusicResponse, MusicDto.class));
+       return Optional.of(ApiMapper.map(documentMusicResponse, MusicDto.class));
     }   
 
     @Override
     public Optional<MusicDto> deleteMusicDocument(String id) {
         
-        Optional<Music> DocumentToDelete = repository.findById(id);
+        Optional<Music> documentToDelete = repository.findById(id);
 
-        if(DocumentToDelete.isEmpty()) {
+        if(documentToDelete.isEmpty()) {
             return Optional.empty();
         }
         
         repository.deleteById(id);
 
-        return Optional.of(ApiMapper.map(DocumentToDelete, MusicDto.class));
+        return Optional.of(ApiMapper.map(documentToDelete.get(), MusicDto.class));
     }
 
 
-    @Override
-    public List<MusicDto> getTodos() {
-        
-        return repository.findAll().stream().map(m -> ApiMapper.map(m,MusicDto.class)).collect(Collectors.toList());
-    }
-    
 }
