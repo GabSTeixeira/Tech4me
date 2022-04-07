@@ -23,7 +23,7 @@ Api para inserir, consultar, alterar e excluir musicas do banco de dados tech4mu
 
     |ValidateException|
     ->  |Devolve strings com o atributo errado e o que esta errado com esse atributo
-        |Devolve Strings com o atributo errado e o que esta errado com esse atributo em cada input do         adicionar varios
+        |Devolve Strings com o atributo errado e o que esta errado com esse atributo em cada input do adicionar varios
 
     |MongoConfig|
     ->  |só pra tirar o atributo class path do mongodb
