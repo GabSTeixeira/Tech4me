@@ -55,8 +55,8 @@ public class MusicServiceImpl implements MusicService {
         if(OptionalMusic.isEmpty()) {
             return Optional.empty();
         }
-
-        return Optional.of(ApiMapper.map(OptionalMusic, MusicDto.class));
+        
+        return Optional.of(ApiMapper.map(OptionalMusic.get(), MusicDto.class));
     }
 
     @Override

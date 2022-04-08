@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -65,6 +64,8 @@ public class ValidateException extends ResponseEntityExceptionHandler {
         // para o countRequest funcionar é necessario deixar a lista em ordem crescente
         Collections.sort(objectErrorArrayList); 
         
+        String messageError;
+        String messageErrorResult = "";
         int index = 0;
         for (String e : objectErrorArrayList) {
             
@@ -76,10 +77,15 @@ public class ValidateException extends ResponseEntityExceptionHandler {
             if (index == 0 || !(e.charAt(29) == objectErrorIndex)) {
                 objectErrorIndex = e.charAt(29);
                 countRequests++;
+                errors.add(messageErrorResult);
+
             }            
             
             objectErrorIndex = e.charAt(29);
-            errors.add("Requisição " + countRequests + ": " + e.substring(e.indexOf("|")+1, e.length()));
+
+            messageError = String.format("Requisição com problema número %s: ", countRequests);
+            messageErrorResult = String.format(messageError + "\n%s", e.substring(e.indexOf("|")+1, e.length()));
+
             
             index++;
         }
