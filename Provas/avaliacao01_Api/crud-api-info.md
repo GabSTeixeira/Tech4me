@@ -1,4 +1,5 @@
 Api para inserir, consultar, alterar e excluir musicas do banco de dados tech4musics na collection musicas.
+tentei fazer tudo em inglês.
 
     |MusicController|
     ->  |métodos|
@@ -23,7 +24,7 @@ Api para inserir, consultar, alterar e excluir musicas do banco de dados tech4mu
 
     |ValidateException|
     ->  |Devolve strings com o atributo errado e o que esta errado com esse atributo
-        |Devolve Strings com o atributo errado e o que esta errado com esse atributo em cada input do adicionar varios
+        |Devolve Maps com o atributo errado como chave e o que esta errado com esse atributo como valor em cada input do adicionar varios
 
     |MongoConfig|
     ->  |só pra tirar o atributo class path do mongodb

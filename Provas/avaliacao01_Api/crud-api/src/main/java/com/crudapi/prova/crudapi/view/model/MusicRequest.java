@@ -20,8 +20,9 @@ public class MusicRequest {
     @NotBlank(message = "deve conter um valor")
     @NotEmpty(message = "não pode ser nulo ou vazio")
     private String genero;
-    @NotNull(message = "deve conter um valor")
-    @Min(value = 1600) @Max(value = 2040)
+    @Min(value = 1600, message = "não pode ser menor que 1600") 
+    @Max(value = 2040, message = "não pode ser maior que 2040")
+    @NotNull(message = "Tem q conter uma valor")
     private int anoLancamento;
     @NotBlank(message = "deve conter um valor")
     @NotEmpty(message = "não pode ser nulo ou vazio")

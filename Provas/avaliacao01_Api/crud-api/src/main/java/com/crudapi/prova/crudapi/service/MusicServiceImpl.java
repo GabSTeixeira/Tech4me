@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class MusicServiceImpl implements MusicService {
 
 
-    ModelMapper ApiMapper = new ModelMapper();
+    private final ModelMapper API_MAPPER = new ModelMapper();
     private final MusicRepository repository;
     
     MusicServiceImpl (MusicRepository music) {
@@ -25,24 +25,26 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     public Optional<MusicDto> createMusicDocument(MusicDto music) {
-        
-        Music documentMusic = ApiMapper.map(music, Music.class);
+
+        Music documentMusic = API_MAPPER.map(music, Music.class);
         Music documentMusicResponse = repository.save(documentMusic);
         
-        return Optional.of(ApiMapper.map(documentMusicResponse, MusicDto.class));
+        return Optional.of(API_MAPPER.map(documentMusicResponse, MusicDto.class));
 
     }
 
     @Override
     public Optional<List<MusicDto>> createManyMusicDocument(List<MusicDto> musics) {
-        
-        List<Music> documentListMusic = musics.stream().map(m -> ApiMapper.map(m, Music.class))
+
+        List<Music> documentListMusic = musics.stream().map(m -> API_MAPPER.map(m, Music.class))
         .collect(Collectors.toList());
 
+        System.out.println(musics.size());
+
         List<Music> documentListMusicResponse = repository.saveAll(documentListMusic);
-        
+
         List<MusicDto> documentListMusicDtoResponse = documentListMusicResponse.stream()
-        .map(m -> ApiMapper.map(m, MusicDto.class)).collect(Collectors.toList());
+        .map(m -> API_MAPPER.map(m, MusicDto.class)).collect(Collectors.toList());
 
         return Optional.of(documentListMusicDtoResponse);
     }   
@@ -56,7 +58,7 @@ public class MusicServiceImpl implements MusicService {
             return Optional.empty();
         }
         
-        return Optional.of(ApiMapper.map(OptionalMusic.get(), MusicDto.class));
+        return Optional.of(API_MAPPER.map(OptionalMusic.get(), MusicDto.class));
     }
 
     @Override
@@ -66,7 +68,7 @@ public class MusicServiceImpl implements MusicService {
             return Optional.empty();
         }
 
-        return Optional.of(repository.findAll().stream().map(m -> ApiMapper.map(m,MusicDto.class)).collect(Collectors.toList()));
+        return Optional.of(repository.findAll().stream().map(m -> API_MAPPER.map(m,MusicDto.class)).collect(Collectors.toList()));
     } 
 
     @Override
@@ -76,12 +78,12 @@ public class MusicServiceImpl implements MusicService {
            return Optional.empty();
        }
 
-       Music documentMusic =  ApiMapper.map(music, Music.class);
+       Music documentMusic =  API_MAPPER.map(music, Music.class);
        documentMusic.setId(id);
 
        Music documentMusicResponse = repository.save(documentMusic);
        
-       return Optional.of(ApiMapper.map(documentMusicResponse, MusicDto.class));
+       return Optional.of(API_MAPPER.map(documentMusicResponse, MusicDto.class));
     }   
 
     @Override
@@ -95,7 +97,7 @@ public class MusicServiceImpl implements MusicService {
         
         repository.deleteById(id);
 
-        return Optional.of(ApiMapper.map(documentToDelete.get(), MusicDto.class));
+        return Optional.of(API_MAPPER.map(documentToDelete.get(), MusicDto.class));
     }
 
 

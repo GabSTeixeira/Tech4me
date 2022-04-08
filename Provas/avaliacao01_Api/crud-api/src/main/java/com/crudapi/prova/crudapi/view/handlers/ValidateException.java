@@ -3,6 +3,7 @@ package com.crudapi.prova.crudapi.view.handlers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -38,59 +39,83 @@ public class ValidateException extends ResponseEntityExceptionHandler {
 
     // método para tratar uma List<MusicRequest>
     @ExceptionHandler({ ConstraintViolationException.class })
-    protected ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex,
+    protected ResponseEntity<List<Map<String,List<String>>>> handleConstraintViolation(final ConstraintViolationException ex,
             final WebRequest request) {
         
-        final List<String> errors = new ArrayList<>();
+        final List<Map<String,List<String>>> errors = new ArrayList<>();
         
-        char objectErrorIndex = '_';
-        int countRequests = 0;
         
         final Object[] objectErrorArray = ex.getConstraintViolations().toArray();
         final ArrayList<String> objectErrorArrayList = new ArrayList<>();
         
         for(int i = 0; i < objectErrorArray.length; i++) {
             
-            // pega o indice da requisição pra saber em qual request especifica deu erro
+            // pega o indice da requisição pra saber em qual request especifico deu erro
             objectErrorArrayList.add((((ConstraintViolation<?>)objectErrorArray[i]).getPropertyPath().toString() + "|" +
             
-            // pega o atributo desse do objeto que deu erro
+            // pega o atributo desse request que deu erro
             ((ConstraintViolation<?>)objectErrorArray[i]).getPropertyPath().toString().substring(32) + " " +
             
             //pega a mensagem de erro do atributo
             ((ConstraintViolation<?>)objectErrorArray[i]).getMessage()));
+
+            //resultado = postManyMusicDocument.musics[indice para separa de qual request é].nome do atributo que deu erro :| mensagem do erro
         }
         
         // para o countRequest funcionar é necessario deixar a lista em ordem crescente
         Collections.sort(objectErrorArrayList); 
         
-        String messageError;
-        String messageErrorResult = "";
-        int index = 0;
+        ObjectError objectError = new ObjectError();
+        char objectErrorIndex = objectErrorArrayList.get(0).charAt(29); // indice do primeiro erro
+        char objectErrorIndexActual = '_';
+        int countRequests = 1;
+        int index = 0; 
         for (String e : objectErrorArrayList) {
-            
-            // verifica se o objt do erro atual é igual ao objt do erro anterior, ser for diferente cria
-            // uma nova Request, assim separa de qual objt é cada erro
-
+  
             //e.charAt(29) = postManyMusicDocument.musics[--->ESTE É O INDICE 29<---]
+            objectErrorIndexActual = e.charAt(29);
 
-            if (index == 0 || !(e.charAt(29) == objectErrorIndex)) {
-                objectErrorIndex = e.charAt(29);
+            if(index == (objectErrorArrayList.size() -1)) {
+                
+                // quando esta no ultimo elemento e ele é do mesmo request que o anterior 
+                if(e.charAt(29) == objectErrorIndex) {
+                    objectError.setRequestNumber(countRequests);
+                    objectError.setAErrorInTheList(e.substring(e.indexOf("|")+1));
+                    objectError.setErrorMessageResult();
+                 
+                    errors.add(objectError.getErrorMessageResult());
+                }
+
+                // quando esta no ultimo elemento e ele é de um request diferente do anterior
+                if(e.charAt(29) != objectErrorIndex) {
+                    // fechamos o request anterior e adicionamos na lista 
+                    objectError.setRequestNumber(countRequests);
+                    objectError.setErrorMessageResult();
+                    errors.add(objectError.getErrorMessageResult());
+
+                    // adicionamos o request atual que é o ultimo na lista e paramos o loop
+                    objectError = new ObjectError();
+                    objectError.setRequestNumber(countRequests+1);
+                    objectError.setAErrorInTheList(e.substring(e.indexOf("|")+1));
+                    objectError.setErrorMessageResult();
+                    errors.add(objectError.getErrorMessageResult());
+                }
+                break;
+            }
+            
+            if (e.charAt(29) != objectErrorIndex) {                
+                objectError.setRequestNumber(countRequests);
+                objectError.setErrorMessageResult();
+                errors.add(objectError.getErrorMessageResult());
+                
+                objectErrorIndex = objectErrorIndexActual;
+                objectError = new ObjectError();
                 countRequests++;
-                errors.add(messageErrorResult);
-
-            }            
+            }
             
-            objectErrorIndex = e.charAt(29);
-
-            messageError = String.format("Requisição com problema número %s: ", countRequests);
-            messageErrorResult = String.format(messageError + "\n%s", e.substring(e.indexOf("|")+1, e.length()));
-
-            
+            objectError.setAErrorInTheList(e.substring(e.indexOf("|")+1));
             index++;
         }
-
-        
-        return new ResponseEntity(errors, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(errors, HttpStatus.NOT_ACCEPTABLE);
     }
 }

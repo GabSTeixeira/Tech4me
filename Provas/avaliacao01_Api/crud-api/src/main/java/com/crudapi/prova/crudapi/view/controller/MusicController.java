@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/musicas")
 public class MusicController {
     
-    ModelMapper ApiMapper = new ModelMapper();
-
+    private final ModelMapper API_MAPPER = new ModelMapper();
+    
     private final MusicService service;
 
     MusicController (MusicService service) {
@@ -39,12 +39,12 @@ public class MusicController {
 
     @PostMapping("/adicionar")
     public ResponseEntity<MusicResponse> postUniqueMusicDocument (@RequestBody @Valid MusicRequest music) {
-        
-        MusicDto documentMusicDto = ApiMapper.map(music, MusicDto.class);
+
+        MusicDto documentMusicDto = API_MAPPER.map(music, MusicDto.class);
 
         MusicDto documentMusicDtoResponse = service.createMusicDocument(documentMusicDto).get();
         
-        MusicResponse documentMusicResponse = ApiMapper.map(documentMusicDtoResponse, MusicResponse.class);
+        MusicResponse documentMusicResponse = API_MAPPER.map(documentMusicDtoResponse, MusicResponse.class);
         return new ResponseEntity<>(documentMusicResponse, HttpStatus.CREATED);
     }
 
@@ -52,10 +52,10 @@ public class MusicController {
     public ResponseEntity<List<MusicResponse>> postManyMusicDocument (@RequestBody @Valid List<MusicRequest> musics) {
 
         List<MusicDto> documentListMusicDto = musics.stream()
-        .map(m -> ApiMapper.map(m, MusicDto.class)).collect(Collectors.toList());
+        .map(m -> API_MAPPER.map(m, MusicDto.class)).collect(Collectors.toList());
 
         List<MusicResponse> documentListMusicResponse = service.createManyMusicDocument(documentListMusicDto).get()
-        .stream().map(m -> ApiMapper.map(m, MusicResponse.class)).collect(Collectors.toList());
+        .stream().map(m -> API_MAPPER.map(m, MusicResponse.class)).collect(Collectors.toList());
 
         return new ResponseEntity<> (documentListMusicResponse, HttpStatus.CREATED);
     }
@@ -65,7 +65,7 @@ public class MusicController {
         
         // só converte se tiver algum valor dentro do Optional, se for empty a variavel recebe null
         MusicResponse documentMusicFound = service.getMusicDocument(id).isPresent() ?
-        ApiMapper.map(service.getMusicDocument(id).get(), MusicResponse.class) : null;
+        API_MAPPER.map(service.getMusicDocument(id).get(), MusicResponse.class) : null;
 
         if(documentMusicFound == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -79,7 +79,7 @@ public class MusicController {
         
         // só converte se tiver algum valor dentro do Optional, se for empty a variavel recebe null
         List<MusicResponse> documentAllMusicFound = service.getAllMusicDocument().isPresent() ?
-        service.getAllMusicDocument().get().stream().map(m -> ApiMapper.map(m, MusicResponse.class))
+        service.getAllMusicDocument().get().stream().map(m -> API_MAPPER.map(m, MusicResponse.class))
         .collect(Collectors.toList()) : null;
         
         if(documentAllMusicFound == null) {
@@ -98,7 +98,7 @@ public class MusicController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        MusicResponse documentMusicDeletedResponse = ApiMapper.map(documentMusicDeleted.get(), MusicResponse.class);
+        MusicResponse documentMusicDeletedResponse = API_MAPPER.map(documentMusicDeleted.get(), MusicResponse.class);
 
         return new ResponseEntity<>(documentMusicDeletedResponse, HttpStatus.OK);
     }
@@ -106,9 +106,9 @@ public class MusicController {
     @PutMapping("/alterar/{id}")
     public ResponseEntity<MusicResponse> putUniqueMusicDocument (@PathVariable String id, @Valid @RequestBody MusicRequest music) {
 
-        MusicDto documentMusicDto = ApiMapper.map(music, MusicDto.class);
+        MusicDto documentMusicDto = API_MAPPER.map(music, MusicDto.class);
         MusicDto documentMusicDtoResponse = service.updateMusicDocument(id, documentMusicDto).get();
-        MusicResponse documentMusicResponse = ApiMapper.map(documentMusicDtoResponse, MusicResponse.class);
+        MusicResponse documentMusicResponse = API_MAPPER.map(documentMusicDtoResponse, MusicResponse.class);
 
         return new ResponseEntity<>(documentMusicResponse, HttpStatus.OK);
     }
