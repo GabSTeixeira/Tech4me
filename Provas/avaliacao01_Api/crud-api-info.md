@@ -8,7 +8,7 @@ tentei fazer tudo em inglês.
             |consultar 1 unica musica  |   GET  |Url = http://localhost:8080/api/musicas/buscar/id
             |consultar varias musicas  |   GET  |Url = http://localhost:8080/api/musicas/buscar/todas
             |deletar 1 unica musica    | DELETE |Url = http://localhost:8080/api/musicas/deletar/id
-            |modificar 1 unica musicas |   PUT  |Url = http://localhost:8080/api/musicas/alterar/id
+            |modificar 1 unica musica  |   PUT  |Url = http://localhost:8080/api/musicas/alterar/id
         |converte de dto para MusicResponse quando é para retornar um obejeto pro client
         |converte de MusicRequest para MusicDto para todo input do client
 
