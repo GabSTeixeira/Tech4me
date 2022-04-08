@@ -103,6 +103,7 @@ public class ValidateException extends ResponseEntityExceptionHandler {
                 break;
             }
             
+            // se a request atual for diferente a ultima ele adiona na lista e cria um novo map
             if (e.charAt(29) != objectErrorIndex) {                
                 objectError.setRequestNumber(countRequests);
                 objectError.setErrorMessageResult();
