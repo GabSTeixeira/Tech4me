@@ -21,6 +21,12 @@
 		},
 		{
 			"path": "config"
+		},
+		{
+			"path": "cadastro-ms"
+		},
+		{
+			"path": "venda-ms"
 		}
 	],
 	"settings": {
