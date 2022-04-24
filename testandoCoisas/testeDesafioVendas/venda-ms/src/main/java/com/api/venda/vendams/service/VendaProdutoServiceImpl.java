@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.api.venda.vendams.model.Venda;
 import com.api.venda.vendams.repository.VendaProdutoRepository;
 import com.api.venda.vendams.shared.VendaDto;
 
@@ -32,6 +33,23 @@ public class VendaProdutoServiceImpl implements VendaProdutoService {
         .map(dat -> MAPPER.map(dat, VendaDto.class)).collect(Collectors.toList());
 
         return Optional.of(ListVendaDto);
+    }
+
+
+    @Override
+    public Optional<VendaDto> listUnique (String id) {
+
+        Optional<Venda> repositoryResponse = repository.findById(id);
+        
+        if(repositoryResponse.isEmpty()) {
+            return Optional.empty();
+        }
+
+
+        // fazer o metodo de buscar unico e dps fazer o metodo de vender
+        VendaDto vendaDtoResponse = 
+
+        return null;
     }
     
     

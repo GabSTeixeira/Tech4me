@@ -1,6 +1,5 @@
 package com.api.venda.vendams.view.model;
 
-
 public class VendaResponse {
     private String codigo;
     private int quantidade;

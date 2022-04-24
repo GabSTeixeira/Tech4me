@@ -8,4 +8,5 @@ import com.api.venda.vendams.shared.VendaDto;
 public interface VendaProdutoService {
     
     Optional<List<VendaDto>> listAll ();
+    Optional<VendaDto> listUnique (String id);
 }

@@ -8,4 +8,6 @@ import com.api.cadastro.cadastroms.shared.ProdutoDto;
 public interface CadastroProdutoService {
     
     Optional<List<ProdutoDto>> listAll ();
+    Optional<ProdutoDto> getUnique (String id);
+    Optional<ProdutoDto> postUnique (ProdutoDto produto);
 }
